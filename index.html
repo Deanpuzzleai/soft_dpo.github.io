@@ -1,0 +1,878 @@
+<html>
+<head>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Source+Serif+4:ital,wght@0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<link rel="shortcut icon" href="images/icon.ico">
+<style type="text/css">
+	* { box-sizing: border-box; margin: 0; padding: 0; }
+
+	body {
+		background-color: #09090b;
+		color: #e4e4e7;
+		-webkit-font-smoothing: antialiased;
+		-moz-osx-font-smoothing: grayscale;
+	}
+
+	html { scroll-behavior: smooth; }
+
+	::selection {
+		background: rgba(139, 92, 246, 0.3);
+		color: #fff;
+	}
+
+	/* ── HERO HEADER ── */
+	.hero-header {
+		position: relative;
+		padding: 6em 2em 4em;
+		text-align: center;
+		overflow: hidden;
+		background: #09090b;
+	}
+	/* Animated gradient mesh background */
+	.hero-header::before {
+		content: '';
+		position: absolute;
+		top: -50%; left: -50%; right: -50%; bottom: -50%;
+		background:
+			radial-gradient(ellipse 600px 400px at 25% 60%, rgba(139, 92, 246, 0.15) 0%, transparent 70%),
+			radial-gradient(ellipse 500px 350px at 75% 30%, rgba(59, 130, 246, 0.12) 0%, transparent 70%),
+			radial-gradient(ellipse 400px 300px at 50% 80%, rgba(236, 72, 153, 0.08) 0%, transparent 70%);
+		animation: meshFloat 12s ease-in-out infinite alternate;
+		pointer-events: none;
+	}
+	@keyframes meshFloat {
+		0%   { transform: translate(0, 0) rotate(0deg); }
+		100% { transform: translate(20px, -15px) rotate(1deg); }
+	}
+	/* Subtle grid overlay */
+	.hero-header::after {
+		content: '';
+		position: absolute;
+		inset: 0;
+		background-image:
+			linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+			linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+		background-size: 60px 60px;
+		pointer-events: none;
+	}
+
+	.hero-inner { position: relative; z-index: 1; max-width: 900px; margin: 0 auto; }
+
+	.paper-tag {
+		display: inline-block;
+		font-family: 'JetBrains Mono', monospace;
+		font-size: 0.7em;
+		font-weight: 500;
+		text-transform: uppercase;
+		letter-spacing: 0.15em;
+		color: #a78bfa;
+		border: 1px solid rgba(139, 92, 246, 0.3);
+		background: rgba(139, 92, 246, 0.08);
+		padding: 0.4em 1.2em;
+		border-radius: 100px;
+		margin-bottom: 1.5em;
+	}
+
+	.paper-title {
+		font-family: 'Inter', sans-serif;
+		font-size: 3em;
+		font-weight: 800;
+		color: #fafafa;
+		letter-spacing: -0.03em;
+		line-height: 1.15;
+		margin-bottom: 1.2em;
+		background: linear-gradient(135deg, #ffffff 0%, #a1a1aa 100%);
+		-webkit-background-clip: text;
+		-webkit-text-fill-color: transparent;
+		background-clip: text;
+	}
+
+	.authors-row {
+		display: flex;
+		justify-content: center;
+		gap: 2em;
+		flex-wrap: wrap;
+		margin-bottom: 1.5em;
+	}
+	.author-card {
+		text-align: center;
+		padding: 0.6em 1.2em;
+		border-radius: 12px;
+		background: rgba(255,255,255,0.03);
+		border: 1px solid rgba(255,255,255,0.06);
+		transition: all 0.3s ease;
+	}
+	.author-card:hover {
+		background: rgba(255,255,255,0.06);
+		border-color: rgba(139, 92, 246, 0.3);
+		transform: translateY(-2px);
+	}
+	.author-name {
+		font-family: 'Inter', sans-serif;
+		font-size: 0.95em;
+		font-weight: 600;
+		color: #e4e4e7;
+	}
+	.author-name a {
+		color: #e4e4e7 !important;
+		text-decoration: none;
+		transition: color 0.2s;
+	}
+	.author-name a:hover { color: #a78bfa !important; }
+	.author-affiliation {
+		font-family: 'Inter', sans-serif;
+		font-size: 0.75em;
+		color: #71717a;
+		margin-top: 0.15em;
+		font-weight: 400;
+	}
+
+	.meta-row {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		gap: 1em;
+		flex-wrap: wrap;
+		margin-top: 1.5em;
+	}
+	.meta-badge {
+		font-family: 'Inter', sans-serif;
+		font-size: 0.75em;
+		color: #71717a;
+		background: rgba(255,255,255,0.04);
+		border: 1px solid rgba(255,255,255,0.08);
+		border-radius: 8px;
+		padding: 0.4em 1em;
+	}
+	.meta-badge sup { color: #a78bfa; font-weight: 600; }
+
+	.date-display {
+		font-family: 'JetBrains Mono', monospace;
+		font-size: 0.8em;
+		color: #52525b;
+		margin-top: 1.5em;
+		letter-spacing: 0.05em;
+	}
+
+	/* ── DIVIDER ── */
+	.glow-divider {
+		height: 1px;
+		background: linear-gradient(to right, transparent, rgba(139, 92, 246, 0.5), rgba(59, 130, 246, 0.5), transparent);
+		border: none;
+		margin: 0;
+	}
+
+	/* ── TOC SIDEBAR ── */
+	.toc-sidebar {
+		position: fixed;
+		left: max(calc((100vw - 820px) / 2 - 240px), 24px);
+		top: 50%;
+		transform: translateY(-50%);
+		width: 180px;
+		font-family: 'Inter', sans-serif;
+		font-size: 0.75em;
+		z-index: 100;
+	}
+	.toc-sidebar .toc-title {
+		font-weight: 600;
+		font-size: 0.7em;
+		text-transform: uppercase;
+		letter-spacing: 0.15em;
+		color: #52525b;
+		margin-bottom: 1.2em;
+	}
+	.toc-sidebar a {
+		display: block;
+		color: #52525b;
+		text-decoration: none;
+		padding: 0.45em 0 0.45em 1em;
+		border-left: 1.5px solid #27272a;
+		transition: all 0.25s ease;
+		font-weight: 400;
+		line-height: 1.4;
+	}
+	.toc-sidebar a:hover {
+		color: #a78bfa;
+		border-left-color: #a78bfa;
+	}
+
+	/* ── CONTENT ── */
+	.content-margin-container {
+		display: flex;
+		width: 100%;
+		max-width: 1200px;
+		margin: 0 auto;
+		justify-content: center;
+	}
+
+	.main-content-block {
+		width: 100%;
+		max-width: 820px;
+		background-color: #09090b;
+		padding: 1.5em 3em;
+		font-family: 'Source Serif 4', Georgia, serif;
+		font-size: 17px;
+		line-height: 1.8;
+		color: #d4d4d8;
+	}
+
+	/* ── TYPOGRAPHY ── */
+	a:link, a:visited {
+		color: #818cf8;
+		text-decoration: none;
+		transition: color 0.2s ease;
+	}
+	a:hover { color: #a78bfa; }
+
+	h1 {
+		font-family: 'Inter', sans-serif;
+		font-size: 1.35em;
+		font-weight: 700;
+		margin-top: 2.5em;
+		margin-bottom: 0.75em;
+		color: #fafafa;
+		letter-spacing: -0.01em;
+	}
+
+	h2 {
+		font-family: 'Inter', sans-serif;
+		font-size: 1.6em;
+		font-weight: 700;
+		margin-top: 3em;
+		margin-bottom: 0.75em;
+		color: #fafafa;
+		letter-spacing: -0.02em;
+		padding-bottom: 0.5em;
+		border-bottom: 1px solid #27272a;
+	}
+
+	h3 {
+		font-family: 'Inter', sans-serif;
+		font-size: 1.15em;
+		font-weight: 600;
+		margin-top: 2em;
+		margin-bottom: 0.5em;
+		color: #e4e4e7;
+	}
+
+	h4 {
+		font-family: 'Inter', sans-serif;
+		font-size: 1em;
+		font-weight: 600;
+		margin-top: 1.5em;
+		margin-bottom: 0.4em;
+		color: #a1a1aa;
+	}
+
+	p {
+		margin-bottom: 1.2em;
+		text-align: justify;
+		hyphens: auto;
+	}
+
+	/* ── EQUATIONS ── */
+	.equation-container {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		margin: 1.5em 0;
+		padding: 1.2em;
+		background: rgba(255,255,255,0.02);
+		border-radius: 12px;
+		border: 1px solid #27272a;
+		overflow-x: auto;
+	}
+	.equation { margin-right: 10px; }
+
+	.equation-block {
+		text-align: center;
+		margin: 1.5em 0;
+		padding: 1.2em;
+		background: rgba(255,255,255,0.02);
+		border-radius: 12px;
+		border: 1px solid #27272a;
+		overflow-x: auto;
+	}
+
+	/* ── FIGURES ── */
+	figure {
+		display: block;
+		text-align: center;
+		margin: 2.5em auto;
+		padding: 1.5em;
+		background: rgba(255,255,255,0.02);
+		border: 1px solid #27272a;
+		border-radius: 16px;
+		transition: border-color 0.3s ease;
+	}
+	figure:hover {
+		border-color: rgba(139, 92, 246, 0.3);
+	}
+	figure img {
+		border-radius: 8px;
+		transition: transform 0.2s ease;
+	}
+	figure img:hover {
+		transform: scale(1.01);
+	}
+	figcaption {
+		margin-top: 1em;
+		font-size: 0.85em;
+		color: #71717a;
+		font-family: 'Inter', sans-serif;
+		font-weight: 400;
+	}
+
+	img {
+		max-width: 100%;
+		height: auto;
+		display: block;
+		margin: auto;
+	}
+
+	/* ── CITATIONS ── */
+	div.citation {
+		font-size: 0.82em;
+		background: rgba(255,255,255,0.02);
+		border: 1px solid #27272a;
+		border-radius: 16px;
+		padding: 2em;
+		height: auto;
+		line-height: 1.9;
+		font-family: 'Inter', sans-serif;
+		color: #a1a1aa;
+	}
+
+	/* ── MISC ── */
+	.my-video {
+		max-width: 100%;
+		height: auto;
+		display: block;
+		margin: auto;
+	}
+	.vid-mobile, .vid-non-mobile { display: none; }
+	.show-vid-mobile .vid-mobile { display: block; }
+	.show-vid-non-mobile .vid-non-mobile { display: block; }
+	.mathjax-mobile, .mathml-non-mobile { display: none; }
+	.show-mathml .mathml-non-mobile { display: block; }
+	.show-mathjax .mathjax-mobile { display: block; }
+
+	hr {
+		height: 1px;
+		border: none;
+		background: linear-gradient(to right, transparent, #27272a, transparent);
+		margin: 3em 0;
+	}
+
+	div.hypothesis {
+		width: 80%;
+		background: rgba(255,255,255,0.03);
+		border: 1px solid #27272a;
+		border-radius: 12px;
+		font-family: 'JetBrains Mono', monospace;
+		font-size: 16px;
+		text-align: center;
+		margin: auto;
+		padding: 1.5em;
+	}
+
+	table.header { font-weight: 300; font-size: 17px; flex-grow: 1; width: 70%; }
+	table td, table td * { vertical-align: middle; position: relative; }
+
+	.margin-left-block, .margin-right-block { display: none; }
+
+	/* ── FOOTER ── */
+	.site-footer {
+		text-align: center;
+		padding: 3em 1em 2em;
+		font-family: 'Inter', sans-serif;
+		font-size: 0.75em;
+		color: #3f3f46;
+		border-top: 1px solid #18181b;
+	}
+
+	/* ── MathJax dark mode override ── */
+	.MathJax, .MathJax_Display, .MathJax span {
+		color: #d4d4d8 !important;
+	}
+
+	/* ── RESPONSIVE ── */
+	@media (max-width: 1100px) {
+		.toc-sidebar { display: none; }
+	}
+	@media (max-width: 768px) {
+		.paper-title { font-size: 2em !important; }
+		.authors-row { gap: 1em; }
+		.main-content-block { padding: 1.5em 1.2em; font-size: 15px; }
+		.hero-header { padding: 4em 1.5em 3em; }
+	}
+
+	.fade-in-inline {
+		position: absolute; text-align: center; margin: auto;
+		-webkit-mask-image: linear-gradient(to right, transparent 0%, transparent 40%, black 50%, black 90%, transparent 100%);
+		mask-image: linear-gradient(to right, transparent 0%, transparent 40%, black 50%, black 90%, transparent 100%);
+		-webkit-mask-size: 8000% 100%; mask-size: 8000% 100%;
+		animation: sweepMask 4s infinite linear; animation-delay: -1s;
+	}
+	.fade-in2-inline { animation-delay: 1s; }
+	.inline-div { position: relative; display: inline-block; vertical-align: top; width: 0; }
+</style>
+
+<script type="text/javascript" async
+src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+<script>
+	// Force MathJax to use light text for dark background
+	window.MathJax = {
+		styles: { '.MathJax': { color: '#d4d4d8 !important' } }
+	};
+</script>
+
+	<title>Preference Optimization of LLMs from Uncertain Human Feedback</title>
+	<meta property="og:title" content="Preference Optimization of LLMs from Uncertain Human Feedback" />
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+</head>
+
+<body>
+
+	<!-- ── Sticky TOC ── -->
+	<nav class="toc-sidebar">
+		<div class="toc-title">On this page</div>
+		<a href="#intro">Introduction</a>
+		<a href="#Related_work">Related Work</a>
+		<a href="#Methods">Methods</a>
+		<a href="#Results_and_Discussion">Results & Discussion</a>
+		<a href="#Conclusion">Conclusion</a>
+		<a href="#references">References</a>
+	</nav>
+
+	<!-- ── HERO ── -->
+	<div class="hero-header">
+		<div class="hero-inner">
+			<div class="paper-tag">Research Paper</div>
+			<div class="paper-title">Preference Optimization of LLMs from Uncertain Human Feedback</div>
+			<div class="authors-row">
+				<div class="author-card">
+					<div class="author-name"><a href="your_partner's_website">Dingcheng Huang</a><sup style="color:#a78bfa;margin-left:2px">1</sup></div>
+					<div class="author-affiliation">MIT</div>
+				</div>
+				<div class="author-card">
+					<div class="author-name"><a href="your_website">Huaibo Chen</a><sup style="color:#a78bfa;margin-left:2px">1</sup></div>
+					<div class="author-affiliation">MIT</div>
+				</div>
+				<div class="author-card">
+					<div class="author-name"><a href="your_website">Xiang Gao</a><sup style="color:#a78bfa;margin-left:2px">2</sup></div>
+					<div class="author-affiliation">Intuit</div>
+				</div>
+				<div class="author-card">
+					<div class="author-name"><a href="your_website">Mingye Gao</a><sup style="color:#a78bfa;margin-left:2px">3</sup></div>
+					<div class="author-affiliation">Google</div>
+				</div>
+			</div>
+			<div class="meta-row">
+				<span class="meta-badge"><sup>1</sup> Massachusetts Institute of Technology</span>
+				<span class="meta-badge"><sup>2</sup> Intuit</span>
+				<span class="meta-badge"><sup>3</sup> Google</span>
+			</div>
+			<div class="date-display">January 12, 2025</div>
+		</div>
+	</div>
+
+	<div class="glow-divider"></div>
+
+	<!-- ── CONTENT ── -->
+
+	<div class="content-margin-container" id="intro">
+		<div class="main-content-block">
+			<h2>1. Introduction</h2>
+			<p>Over recent years, large language models (LLMs) have gained significant attention, with notable examples such as ChatGPT,
+				Claude, and LLaMA showcasing their capabilities in assisting humans across various domains. The general procedure
+				for training an LLM includes pre-training and post-training. In the pre-training stage, a autoregressive model that can predict
+				the next token of words based on previous tokens is trained on a large corpus of context. In the post-training stage, the LLM is
+				first fine-tuned to follow instructions or incorporate domain knowledge, and then preference alignment is done to make the LLM
+				generate content matching human's preferences.</p>
+			<p>Alignment plays an important role in the training of LLMs, where the model is adjusted to align with human values, such as safety,
+				fairness, and coherence.  The alignment stage typically begins with human
+			preference data collection, in which, for a given prompt, multiple responses (usually two) generated by the LLM are labeled
+			by human annotators (or AI assessment, such as another LLM) in the form of chosen-rejected pairs. Then, the LLM is fine-tuned by reinforcement learning from
+			human feedback (RLHF) <a href="#ref_1">[1]</a> or direct preference optimization (DPO) <a href="#ref_2">[2]</a> to align the model with the preference data.</p>
+			<p>It is worth noting that in some datasets (e.g., the ultrafeedback_binarized dataset on Hugging Face <a href="#ref_3">[3]</a>), even when scores for
+			each response are available, researchers still tend to binarize them (i.e., take the one with a higher score as chosen and lower
+			as rejected). Clearly, scores provide more information than pairwise labels <a href="#ref_4">[4]</a>. For example, the variance of degree of difference between the pair, and
+			both good or both bad cases cannot be manifested by binary preference data. The trend of using binary preference data is due to the concern that the inconsistency of individual
+			preference can make the score data noisy, leading to instability and poor performance in alignment. However, we did not
+			find any literature that supports the concern. Since methods for handling noisy binary labels have already been developed, it
+			is worthwhile to extend our research toward addressing noise in preference labels <a href="#ref_5">[5]</a>. Given the high cost of human feedback data,
+			we believe that the appropriate approach for handling noisy human annotation is to quantify the ambiguity and uncertainty
+			of human feedback, rather than decreasing the granularity of data.</p>
+			<p>Inspired by the work from computer vision <a href="#ref_6">[6]</a>, we propose incorporating human preferences through soft labels (i.e.,
+			the probability of being chosen) in LLM alignment. By representing feedback as scores rather than binary labels, we aim to
+			capture a richer spectrum of human intent.</p>
+		</div>
+	</div>
+
+
+	<div class="content-margin-container" id="Related_work">
+		<div class="main-content-block">
+			<h2>2. Related Work</h2>
+			<p>In the context of LLM alignment, extensive research has been conducted to design the alignment frameworks or refine the alignment process.
+			</p>
+			<h3>2.1 Reinforcement Learning from Human Feedback (RLHF) </h3>
+			<p>Reinforcement Learning with Human Feedback (RLHF) <a href="#ref_1">[1]</a> is the most widely adopted method for aligning LLMs.
+			   Illustrated in Figure 1, RLHF follows a three-step process. First, supervised fine-tuning (SFT) is conducted to enhance the model's ability to
+			   follow instructions. Next, a reward model is trained using human preferences on the outputs generated by the LLM,
+			   predicting which outputs align with human evaluators' expectations. Finally, reinforcement learning, often via proximal policy optimization (PPO),
+			   fine-tunes the LLM based on the reward model developed in the second step.</p>
+			<figure>
+				<img src="./images/rlhf.png"  width="500">
+				<figcaption>Figure 1: RLHF framework illustration <a href="#ref_1">[1]</a> </figcaption>
+			</figure>
+			<h3>2.2 Direct Preference Optimization (DPO) </h3>
+			<p>Rafailov et al. <a href="#ref_2">[2]</a> proposed the direct preference optimization (DPO), where the LLM can be optimized directly on the preference data without reward models.
+			   The DPO trainer aims to maximize the likelihood of \( p(y_w>y_l | x) \) to fine-tune the LLM. Here, \(x\) is the prompt, \(y_w\)
+			   is the chosen response, and \(y_l\) is the rejected response. The DPO framework is illustrated by figure 2.</p>
+			<figure>
+				<img src="./images/DPOimg.png"  width="500">
+				<figcaption>Figure 2: DPO Framework Illustration <a href="#ref_2">[2]</a> </figcaption>
+			</figure>
+			<h3>2.3 Recent Endeavours in Preference alignment</h3>
+			<p> To refine the alignment process, some papers addressed the noisy binary labels (i.e., randomly flipped labels) by label smoothing <a href="#ref_7">[7, 8]</a> or
+				modified the loss function to get unbiased estimation <a href="#ref_5">[5]</a>. Mao et al. <a href="#ref_4">[4]</a> highlighted that DPO can be inefficient due to the
+				disregard for reward values, with their research specifically focusing on reward values generated by a reward model trained
+				on binary preference data. However, none of them considered the detailed score labels. </p>
+			<h3>2.4 Inspiration from Computer Vision Research</h3>
+			<p>Inspired by Peterson et al. <a href="#ref_6">[6]</a>'s findings that incorporating human uncertainty via labels can improve adversarial robustness and out-of-distribution generalization
+				in image classification, we propose using soft labels in DPO to incorporate human preference uncertainty in alignment. In fact, the soft label is first used in knowledge
+				distillation <a href="#ref_9">[9]</a>, where a large teacher model is trained for image classification first,
+				and then a small student model is trained on the soft labels, which is generated by the trained teacher model after Softmax. The reason of its outperforming
+				training small models directly on hard labels is that the soft labels usually contain more information. For example, if one image in class 1 has both high probability of
+				class 1 and 2, it means that it contains the characteristics of both class 1 and 2. Similarly, we expect that soft labels can contain more information than hard labels in preference optimization.</p>
+		</div>
+	</div>
+
+	<div class="content-margin-container" id="Methods">
+		<div class="main-content-block">
+        <h2>3. Methods</h2>
+        <p>In this project, we developed the soft-labeled version of the DPO trainer to address human preference uncertainty in alignment.
+		We tested the performance of the fine-tuned LLM in terms of alignment performance under noisy labels, robustness to adversarial attack, and out-of-distribution
+		generalization. To validate our hypothesis, several datasets are generated or utilized, each serving different testing purposes.</p>
+		<h3>3.1 DPO Trainer Modification</h3>
+		<p> Since the Hugging Face DPO trainer is designed for binary labels (i.e., The chosen response is labelled as 1 while the rejected response is labelled 0), modifications need to be made to incorporate
+			soft labels in the training process. We first added the soft_label option in the tokenizer to convert labels into tensors. Then, we added a soft_ce loss type in the original
+			DPO trainer to ensure compatibility. Finally, we designed the loss function for the soft_label formulation. The detailed derivation of the loss function will be explained in the section 3.1.1.</p>
+		<h4>3.1.1 Loss Function</h4>
+		<p>The vanilla DPO trainer defaultly applies the sigmoid loss function based on the DPO paper. Eqn. 1 is the loss function formulated in the DPO paper:</p>
+		<div class="equation-container">
+			<span class="equation">
+				\begin{align}
+				\mathcal{L}_{\text{DPO}}(\pi_\theta; \pi_{\text{ref}}) = -\mathbb{E}_{(x, y_w, y_l) \sim \mathcal{D}} \left[
+				\log \sigma \left(
+				\beta \log \frac{\pi_\theta(y_w | x)}{\pi_{\text{ref}}(y_w | x)} -
+				\beta \log \frac{\pi_\theta(y_l | x)}{\pi_{\text{ref}}(y_l | x)}
+				\right)
+				\right]. \tag{1}
+				\end{align}
+		</div>
+		<p>Where \( \log \pi_\theta(y_w | x) \) and \( \log \pi_\theta(y_l | x) \) are the log probabilities of the policy model for the chosen and rejected responses (i.e., the probability of getting the responses for the LLM),
+			\( \log \pi_{\text{ref}}(y_w | x) \) and \( \log \pi_{\text{ref}}(y_l | x) \) are the log probabilities of the reference model for the chosen and rejected responses,
+			 \(\sigma\) is the sigmoid function and \(\beta\) is a temperature parameter for the DPO loss in front of the regularization term, typically something in the range of 0.1 to 0.5.</p>
+		<p>Rearranging the terms in the sigmoid function, we get: </p>
+		<div class="equation-container">
+			<span class="equation">
+				\begin{align}
+				\mathcal{L}_{\text{DPO}}(\pi_\theta; \pi_{\text{ref}}) = -\mathbb{E}_{(x, y_w, y_l) \sim \mathcal{D}} \left[
+				\log \sigma \left(
+				\beta \log \frac{\pi_\theta(y_w | x)}{\pi_\theta(y_l | x)} -
+				\beta \log \frac{\pi_{\text{ref}}(y_w | x)}{\pi_{\text{ref}}(y_l | x)}
+				\right)
+				\right]. \tag{2}
+				\end{align}
+
+
+		</div>
+		<p>The terms in sigmoid function is exactly \( \beta \cdot {\text{logits}} \). Hence, Eqn. 2 can be simplifed to:</p>
+		<div class="equation-container">
+			<span class="equation">
+				\begin{align}
+				\mathcal{L}_{\text{DPO}}(\pi_\theta; \pi_{\text{ref}}) = -\log \sigma (\beta \cdot {\text{logits}}) \cdot {\text{label}}- \log \sigma (-\beta \cdot {\text{logits}})\cdot(1-{\text{label}}) \tag{3}
+				\end{align}
+		</div>
+		<p>In the soft label formulation, our objective is to minimze the distance between the actual probability distribution and the predicted probability distribution. In other words, we
+			aim to minimize the KL divergence between the soft label and the predicted probability.
+		</p>
+		<p>KL divergence is defined as the difference between the cross entropy (CE) and entropy (E). The entropy of the soft label is defined as following:</p>
+		<div class="equation-container">
+			<span class="equation">
+				\begin{align}
+				{\text{E}} = -{\text{soft_label}}\cdot \log({\text{soft_label}})-(1-{\text{soft_label}}) \cdot \log (1-{\text{soft_label}})  \tag{4}
+				\end{align}
+		</div>
+		<p>In order to derive the cross entropy, we define the log probability of the chosen response as:</p>
+		<div class="equation-container">
+			<span class="equation">
+				\begin{align}
+				\log p_{pred} = \log\sigma(\beta \cdot{\text{ logits}}) \tag{5}
+				\end{align}
+		</div>
+		<p>Similarly, the log probability of the rejected response is:</p>
+		<div class="equation-block">
+			\begin{align}
+			\log (1-p_{pred})
+			&= \log(1-\sigma(\beta \cdot{\text{ logits}})) \\
+			&= \log \sigma(-\beta \cdot{\text{ logits}}) \tag{6}
+			\end{align}
+
+		</div>
+		<p> Applying Eqn. 5 and Eqn. 6, we can obtain the cross entropy:</p>
+		<div class="equation-block">
+			\[
+			\begin{align}
+			{\text{CE}}
+			&= -{\text{soft_label}} \cdot \log (p_{pred}) - (1-{\text{soft_label}}) \cdot \log (1-p_{pred})  \\
+			&= -{\text{soft_label}} \cdot \log\sigma(\beta \cdot{\text{ logits}}) - (1-{\text{soft_label}}) \cdot \log \sigma(-\beta \cdot{\text{ logits}}) \tag{7}
+			\end{align}
+			\]
+		</div>
+		<p>Therefore, the soft-labeled DPO loss can be formulated as: </p>
+		<div class="equation-container">
+			<span class="equation">
+				\begin{align*}
+				\mathcal{L}_{\text{DPO}}(\pi_\theta; \pi_{\text{ref}}) = &-{\text{soft_label}} \cdot \log\sigma(\beta \cdot{\text{ logits}}) - (1-{\text{soft_label}}) \cdot \log \sigma(-\beta \cdot{\text{ logits}})  \\
+																		   &+ {\text{soft_label}}\cdot \log({\text{soft_label}}) + (1-{\text{soft_label}}) \cdot \log (1-{\text{soft_label}}) \tag{8}
+			    \end{align*}
+		</div>
+		<p>The soft-label generation from the reponse scores varies by datasets. For datasets without large score difference (i.e., \( {\text{score_diff}}\lt10\)), we directly apply softmax to the pairwise scores to
+			render the probability of the higher-score response. For datasets with large score difference and negative scores (i.e., \( {\text{score_diff}}\gt10\)), the soft-label generation becomes a two-step process.
+			Firstly, for \( {\text{scores}}\ge 0\), we define \( {\text{scaled_score}}=\log(1+score)\) and for negative socres, we define \( {\text{scaled_score}}=\frac{1}{e}\). Next, we apply softmax to the pairwise scaled-scores
+			to obtain the probability of the higher-score response. The reason behind such operation is that for large score difference, if the raw scores are not scaled, \( \log(1-{\text{soft_label}})\) will be driven to negative infinity,
+			leading to numerical instability. As a result, the gradient norm might become NaN during the training process.
+
+
+
+		<h3>3.2 Dataset Generation</h3>
+		<h4>3.2.1 Ultrafeedback_binarized:</h4>
+		<p>The ultrafeedback_binarized dataset is a prevailing benchmark dataset for DPO trainers, and it consists of 64k data points. Although it is binarized,
+			the score information is still available for soft label generation. The dataset is available on Hugging Face and can be retrieved from the TRL dataset library. An exmaple of the
+			the dataset is illustrated in Figure 3. </p>
+			<figure>
+				<img src="./images/ultra.png"  width="600">
+				<figcaption>Figure 3: Ultrafeedback_binarized Dataset Illustration </figcaption>
+			</figure>
+		<h4>3.2.2 Reddit_NoStupidQuestion:</h4>
+		<p>In order for the LLM to generate more human-like responses, we collected submission data and comment data from Reddit. The submission data is treated as human prompts,
+			and the comments are considered as LLM responses. The NoStupidQuestion subreddit contains around three million submissions and thirty million comments. We first conducted
+			content filtering to remove submissions or comments that are inappropriate or deleted. Then, we randomly sampled 60k submissions along with their corresponding comments.
+			Note that in order to increase the quality of the dataset, we only sampled submissions with more than ten appropriate comments. We define response score as the number of
+			upvotes minus the number of downvotes. For each submission, we take the highest-score comment as our chosen response and the lowest-score comment as our rejected response.
+			In the case of equal scores, responses are chosen arbitrarily. In this dataset, since the score difference is large and there exisits negative scores. We applied the
+			score scalling mentioned in section 3.1.1. The distribution of raw scores along with the distribution of the scaled scores are shown in Figure 4 and Figure 5. As seen in the image,
+			the scaled score distribution is smoother. Finally, the resulting dataset contains four features: chosen response, rejected response, chosen score and
+			rejected score. The dataset contains 55k entries, and we split it into 54k training data and 1k validation data.</p>
+			<figure>
+				<img src="./images/score.png"  width="600">
+				<figcaption>Figure 4: Raw Score Distribution </figcaption>
+			</figure>
+			<figure>
+				<img src="./images/scaled.png"  width="600">
+				<figcaption>Figure 5: Scaled Score Distribution </figcaption>
+			</figure>
+
+		<h4>3.2.3 Reddit_Askreddit:</h4>
+		<p>In order to test the out-of-distribution performance, we collected data from the AskReddit subreddit and generated a 55k validation dataset.
+		   Since the Askreddit subreddit contains thirty million submissions and six hundred million comments, it is not feasible to generate the validation dataset
+		   using exactly the above-mentioned process. Instead, we sampled 60k submissions from the first three million submissions along with their corresponding comments.
+		   Then, the rest of the dataset generation process is the same.</p>
+		<h4>3.2.4 Soft_safer_PKU-SafeRLHF:</h4>
+		<p>The soft_safer_PKU-SafeRLHF dataset is created to evaluate safety, harm categorization, and response optimization. This dataset provides comprehensive information
+			on prompts, model responses, and their associated safety along with harm assessments. The dataset contains 74k entries and the detailed features of the dataset are
+			demonstrated in table 1. </p>
+		<figure>
+			<img src="./images/tableimg.png"  width="512">
+		</figure>
+		<h3>3.3 Dataset Manipulation</h3>
+		<p>In order to test the alignment performance with noisy data, we developed a label-flipping function to infuse noise into our datasets. The label-flipping function swaps the chosen and rejected content to simulate the
+			human feedback uncertainty. The label-flipping function assigns the flipping probability for each data and the flipping probability is constructed using the equation below:</p>
+		<div class="equation-block">
+			\begin{align}
+			p_{flip} = \frac{1}{1 + \alpha \cdot e^{-\gamma \cdot \Delta}}
+			\end{align}
+		</div>
+		<p>Here, \( \alpha \) and \( \gamma\)\ are parameters that influence the shape of the sigmoid function, thereby determining the probability assignment. The term \( \Delta \) represents the absolute difference between the scores, defined as: </p>
+		<div class="equation-block">
+			\begin{align}
+			\Delta=|{\text{score_chosen}}-{\text{score_rejected}}|
+			\end{align}
+		</div>
+		<p>Intuitively, the probability assignment is valid as we need to assign high probability to data with small or no score difference and we should barely flip any data with large score difference.
+			In our test case, the parameters used are:  \( \alpha=0.02\) and \( \gamma=-4\). Figure 3 provides the visualization of the probability assignment function and the horizontal axis is the score difference </p>
+		<figure>
+			<img src="./images/output.png"  width="400">
+			<figcaption>Figure 6: Plot of the probability assignment function</figcaption>
+		</figure>
+		<h3>3.4 Experimental Setting </h3>
+		<p>LLaMA-3-8B-Instruct is used in all experiments of this report. For parameter-efficient fine-tuning, we combine DPO with LoRA (Low-Rank Adaptation) <a href="#ref_10">[10]</a>, using an \( \alpha\) value of 128, a dropout rate of 0.05, and a rank (\( r \)) of 64, and the targeting parameters are
+		the Q, K, and V projection matrices. We train each LLM for a single epoch with a per-device batch size of 16. Adam optimizer is used with a learning rate of 5 &times; 10<sup>-6</sup> and an epsilon value of 1 &times; 10<sup>-8</sup>.
+		We employed a linear learning rate scheduler and incorporated a warmup ratio of 0.1, allowing the model to gradually adjust from the initial learning rate. To ensure reproducibility and stability,
+		we set the random seed to 42. Gradient checkpointing was enabled to reduce memory usage, and we performed training in bfloat16 precision.</p>
+
+		</div>
+	</div>
+
+
+	<div class="content-margin-container" id="Results_and_Discussion">
+		<div class="main-content-block">
+			<h2>4. Results and Discussion</h2>
+		</div>
+	</div>
+
+
+	<div class="content-margin-container">
+		<div class="main-content-block">
+			<h1>4.1 Metrics </h1>
+			<p>We measure the performance of LLMs trained on soft labels by attack success rate and win rate.</p>
+			<p>Specially, for the adversarial robustness, we trained two LLMs on Soft_safer_PKU-SafeRLHF dataset with hard
+				and soft labels, respectively. Then we do white box adversarial attack to the two models to make LLMs output dangerous responses. The attack method is described in <a href="#ref_11">[11]</a>, and the desired responses are listed
+				in the repository of that paper, referred as AdvBench <a href="#ref_12">[12]</a>. Figure 7 provides the detailed illustration of the attach methodology. Briefly, the method try to optimize the suffix after the prompt of asking for dangerous behaviors to maximize LLM's probability of generating the
+				affirmative answer (e.g., 'Sure, here is the method to make a bomb'). Please notice that we optimize different suffix for each invidual desired response, instead of universal attack.</p>
+			<p>For OOD performance, we first trained two models on in-distribution data (i.e., The Ultrafeedback_binarized dataset) with soft and hard labels respectively, and evaluate the win rate
+				on the test set. Then, we evaluated the tuned model performance on the OOD test datset (i.e. Reddit_Askreddit dataset). Here, win rate is defined as the ratio on test set where the probability of generating the positive response is larger than that of the negative response. The details of data preparation can be
+				found in the data generation subsection.</p>
+			<p> For robustness against noisy label, we train two LLMs on the flipped training set with soft and
+				hard labels, respectively, and then test the win rate on unchanged test set. The procedure of flipping labels can be found in data generation subsection. Please note that in the experiments of OOD
+				performance and robustness against label flipping, the test sets keep unchanged, i.e., binary and no flipping.</p>
+				<figure>
+					<img src="./images/attack.png"  width="500">
+					<figcaption>Figure 7: Illustration of Adversarial Attack</figcaption>
+				</figure>
+
+		</div>
+	</div>
+
+	<div class="content-margin-container">
+		<div class="main-content-block">
+			<h1>4.2 Results</h1>
+
+			<figure>
+				<img src="./images/table2.png"  width="600">
+			</figure>
+			<p>The results are shown in Table 2. Firstly, we observe that for the training set with no flipping and in-distribution test set, the test win rates are very close for soft labels and hard labels
+				on Ultrafeedback_binarized and Reddit_NoStupidQuestion datasets. However, for PKU-SafeRLHF, training on soft labels can lead to a worse test win rate.
+			<p>Secondly, for the robustness against label flipping, we can observe that
+				training on the randomly flipped training set with soft labels can lead to better test win rate on Ultrafeedback_binarized and Reddit_NoStupidQuestion, but not on PKU-SafeRLHF. Since the flipping probability
+				is larger for two responses with closer scores, it is intuitive to get better test win rate by assigning close soft labels for these pairs than using binary labels that indicate absolute goodness and badness. In fact, for the Ultrafeedback_binarized dataset, we also ran
+				2 epochs to investigate the potential effect of further training. We can see that the increase in performance becomes larger when we train with 2 epochs. This result is promising as it demonstrates that with sufficient amount of
+				training, soft-label formulation will be better and better at handling noise human feedback than the binary-label formulation. In terms of the PKU-SafeRLHF, based on
+				 the observation, we suspect that the counter-intuitive behavior of PKU-SafeRLHF dataset is caused by unreasonable conversion of hard labels to soft labels. More specifically, the dataset has different levels of
+				 granularity, instead of just a number of score. </p>
+			<p>It is worth noting that the flipped Reddit_NoStupidQuestion dataset results in a significant decrease in the win rate for the vanilla DPO and a large increase
+				in the soft-labeled formulation. While the result seems promising, the actual increase in perforamnce might not be as large as the result has shown. The detailed analysis regarding this oberservation will be addressed in section 4.3.</p>
+			<p>In order to test the OOD generalization, we train two LLMs on NoStupidQuestion with both soft and hard labels, and evaluate the win rate on Reddit_Askreddit. We notice that the win rate for soft labels and hard labels are
+				 similar, with slight increase in performance for the soft-label formulation. However, since the difference is small, the actual impact of using soft labels on OOD performance evaluation cannot be verified. For the adversarial robustness, we train two LLMs on PKU-SafeRLHF with hard or soft labels respectively, and
+				 then perform adversarial attack using the codebase of <a href="#ref_12">[12]</a>. The success rate for two LLMs are pretty close, around 0.42. This means that the impact of performing alignment on soft labels
+				 cannot be verified.</p>
+		</div>
+	</div>
+
+
+	<div class="content-margin-container">
+		<div class="main-content-block">
+			<h1>4.3 Limitation</h1>
+
+			<p>The results shown in Table 2 have several drawbacks. Firstly, due to the computational cost, we only perform one or two run for each case. Thus, it is hard to assess whether the difference or similarity between hard and
+				 soft labels has statistical significance. It would be more convincing if we could repeat each case for several times and demonstrate the statistical significance by p-value. </p>
+			<p>Secondly, more diverse datasets are needed to verify the results. Due to the multi-granularity issue of PKU-SafeRLHF dataset, we should either consider more reasonable conversion to soft labels, or consider more datasets with scores
+				  to further verify the impact of soft labels.</p>
+			<p> Thirdly, the Reddit_Askreddit dataset clearly shows advantage in its scoring methedology compared to conventional dataset such as the Ultrafeedback_binarized. While each data in Ultrafeedback_binarized dataset is
+				labelled by one human annotator, the scores in Reddit_Askreddit data is based on the votings from thousands of users. The votings reflects a collective preference of users which would result in less
+				feedback bias. However, a critical limitation of the reddit dataset is that the chosen reponse can be vastly different from the rejected response in terms of the content. A typical chosen reponse is generally
+				informative and comprehensive while the chosen response is often short and irrelevant. As a result, the nuanced human preference such as the tone might not be well captured. In addition, the large semantic difference
+				also creates more noise when we conducted label flipping. The drawback of the reddit dataset explains why the performance of the vanilla DPO drops so much for the flipped case. We suspect that although the soft-label formulation
+				would still be better at handling noisy data, but the actual improvement is not as much as the experiment result has shown for the reddit dataset.  Hence, further dataset refinement needs to be made.
+				For example, we should assess the semantic similarity between the chosen and the rejected content to avoid large difference in contents.
+			</p>
+		</div>
+	</div>
+
+
+	<div class="content-margin-container" id="Conclusion">
+		<div class="main-content-block">
+			<h2>5. Conclusion </h2>
+			<p> In this project, we explored the incorporation of soft labels derived from detailed score data into the DPO framework for LLM alignment. Our goal was to capture the uncertainty
+			of human preference rather than relying solely on binary labels. Our hypothesis is that soft labels can enhance robustness against noisy labels, improve resistance to adversarial attacks,
+			and support better out-of-distribution generalization in LLMs. From the experiemnt results, we can conclude that the use of soft labels can indeed improve the alignment performance on test set when the training set is noisy. In other words,
+			when the human preference is uncertain, soft-labeled formulation does better capture the human intent as demosntrated by the flipped datasets.
+			For PKU-SafeRLHF, the imrpovement is not observed, and the potential reason is the complexity of label granularity. Moreover, evaluating out-of-distribution generalization and adversarial robustness
+			revealed slight advantage for soft labels. However, the actual statistical significance requires further repetitive test runs to be verified. Neverthelss, we suspect that the unclear advantage of soft-label formulation is also due to the large semantic difference between the chosen and rejected response</p>
+			<p> Our findings show potential advantages of using soft labels in LLM alignment, but also underscore the need for additional research, including repeated runs
+				and exploration of more diverse datasets.</p>
+		</div>
+	</div>
+
+	<div class="glow-divider"></div>
+
+	<div class="content-margin-container" id="references">
+		<div class="main-content-block">
+			<div class='citation' style="height:auto"><br>
+				<span style="font-size:1.1em; font-weight: 700; font-family: 'Inter', sans-serif; color: #fafafa;">References</span><br><br>
+				<a id="ref_1"></a>[1] Ouyang, Long, Jeffrey Wu, Xu Jiang, Diogo Almeida, Carroll Wainwright, Pamela Mishkin, Chong Zhang et al.
+				"Training language models to follow instructions with human feedback."
+				<i>Advances in Neural Information Processing Systems</i> 35 (2022)<br><br>
+
+				<a id="ref_2"></a>[2] Rafailov, Rafael, Archit Sharma, Eric Mitchell, Christopher D. Manning, Stefano Ermon, and Chelsea Finn.
+				"Direct preference optimization: Your language model is secretly a reward model."
+				<i>Advances in Neural Information Processing Systems</i> 36 (2024)<br><br>
+
+				<a id="ref_3"></a>[3] <a href="https://huggingface.co/datasets/HuggingFaceH4/ultrafeedback_binarized">https://huggingface.co/datasets/HuggingFaceH4/ultrafeedback_binarized</a><br><br>
+
+				<a id="ref_4"></a>[4] Mao, Xin, Feng-Lin Li, Huimin Xu, Wei Zhang, and Anh Tuan Luu.
+				"Don't Forget Your Reward Values: Language Model Alignment via Value-based Calibration."
+				<a href="https://arxiv.org/abs/2402.16030">arXiv:2402.16030</a> (2024)<br><br>
+
+				<a id="ref_5"></a>[5] Chowdhury, Sayak Ray, Anush Kini, and Nagarajan Natarajan.
+				"Provably robust dpo: Aligning language models with noisy feedback."
+				<a href="https://arxiv.org/abs/2403.00409">arXiv:2403.00409</a> (2024)<br><br>
+
+				<a id="ref_6"></a>[6] Peterson, Joshua C., Ruairidh M. Battleday, Thomas L. Griffiths, and Olga Russakovsky.
+				"Human uncertainty makes classification more robust."
+				In <i>Proceedings of the IEEE/CVF International Conference on Computer Vision</i>, pp. 9617-9626. 2019.<br><br>
+
+				<a id="ref_7"></a>[7] Mitchell, Eric.
+				"A note on DPO with noisy preferences & relationship to IPO." 2023.
+				<a href="https://ericmitchell.ai/cdpo.pdf">https://ericmitchell.ai/cdpo.pdf</a><br><br>
+
+				<a id="ref_8"></a>[8] Huang, Baihe, Hiteshi Sharma, and Yi Mao.
+				"Enhancing Language Model Alignment: A Confidence-Based Approach to Label Smoothing."
+				In <i>Proceedings of the 2024 Conference on Empirical Methods in Natural Language Processing</i>, pp. 21341-21352. 2024.<br><br>
+
+				<a id="ref_9"></a>[9] Hinton, Geoffrey.
+				"Distilling the Knowledge in a Neural Network."
+				<a href="https://arxiv.org/abs/1503.02531">arXiv:1503.02531</a> (2015)<br><br>
+
+				<a id="ref_10"></a>[10] Hu, Edward J., Yelong Shen, Phillip Wallis, Zeyuan Allen-Zhu, Yuanzhi Li, Shean Wang, Lu Wang, and Weizhu Chen.
+				"Lora: Low-rank adaptation of large language models."
+				<a href="https://arxiv.org/abs/2106.09685">arXiv:2106.09685</a> (2021)<br><br>
+
+				<a id="ref_11"></a>[11] Zou, Andy, Zifan Wang, Nicholas Carlini, Milad Nasr, J. Zico Kolter, and Matt Fredrikson.
+				"Universal and transferable adversarial attacks on aligned language models."
+				<a href="https://arxiv.org/abs/2307.15043">arXiv:2307.15043</a> (2023)<br><br>
+
+				<a id="ref_12"></a>[12] <a href="https://github.com/arobey1/advbench">https://github.com/arobey1/advbench</a><br><br>
+
+			</div>
+		</div>
+	</div>
+
+	<!-- ── FOOTER ── -->
+	<div class="site-footer">
+		Preference Optimization of LLMs from Uncertain Human Feedback &mdash; 2025
+	</div>
+
+</body>
+
+</html>
